@@ -19,6 +19,8 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -64,5 +66,5 @@ class User extends Authenticatable
         //$userData=DB::table('users')->where('email',$email)->get();
         //return $userData;
     //}
-    protected $table = 'users';
+    
 }

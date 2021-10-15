@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
@@ -14,26 +15,21 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|string|unique:users',
             'password' => 'required|string|min:6'
         ]);
-
-        $user = new User([
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-
-        //$userModel=new User();
-        //$userData = $user->getEmail($request->email);
-        //if (count($userData) == 0)
-        //{
+       
+        if ($validator->fails()){
+            return response()->json(['message' => 'Email already taken'], 400);
+        } else{
+            $user = new User([
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
             $user->save();
             return response()->json(['message' => 'User successfully registered'], 201);
-        //} else 
-        //{
-            //return response()->json(['message' => 'Email already taken'], 400);
-        //}
+        }
         
     }
 
